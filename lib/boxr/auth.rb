@@ -1,15 +1,15 @@
 module Boxr
-
   JWT_GRANT_TYPE="urn:ietf:params:oauth:grant-type:jwt-bearer"
   TOKEN_EXCHANGE_TOKEN_TYPE="urn:ietf:params:oauth:token-type:access_token"
   TOKEN_EXCHANGE_GRANT_TYPE="urn:ietf:params:oauth:grant-type:token-exchange"
 
-  def self.oauth_url(state, host: "app.box.com", response_type: "code", scope: nil, folder_id: nil, client_id: ENV['BOX_CLIENT_ID'])
+  def self.oauth_url(state, host: "app.box.com", response_type: "code", scope: nil, folder_id: nil, client_id: ENV['BOX_CLIENT_ID'], redirect_uri: nil)
     template = Addressable::Template.new("https://{host}/api/oauth2/authorize{?query*}")
 
     query = {"response_type" => "#{response_type}", "state" => "#{state}", "client_id" => "#{client_id}"}
     query["scope"] = "#{scope}" unless scope.nil?
     query["folder_id"] = "#{folder_id}" unless folder_id.nil?
+    query["redirect_uri"] = redirect_uri if redirect_uri
 
     uri = template.expand({"host" => "#{host}", "query" => query})
     uri

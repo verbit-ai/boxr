@@ -26,40 +26,8 @@ require 'boxr/web_links'
 require 'boxr/watermarking'
 require 'boxr/webhooks'
 require 'boxr/webhook_validator'
-
-class BoxrCollection < Array
-  def files
-    collection_for_type('file')
-  end
-
-  def folders
-    collection_for_type('folder')
-  end
-
-  def web_links
-    collection_for_type('web_link')
-  end
-
-  private
-
-  def collection_for_type(type)
-    items = select { |i| i.type == type }
-    BoxrCollection.new(items)
-  end
-end
-
-class BoxrMash < Hashie::Mash
-
-  self.disable_warnings
-
-  def entries
-    self["entries"]
-  end
-
-  def size
-    self["size"]
-  end
-end
+require 'boxr/boxr_collection'
+require 'boxr/boxr_mash'
 
 module Boxr
   #The root folder in Box is always identified by 0

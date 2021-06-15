@@ -13,13 +13,20 @@ module Boxr
 
     MAXIMUM_MESSAGE_AGE = 600 # 10 minutes (in seconds)
 
-    def initialize(headers, payload, primary_signature_key: nil, secondary_signature_key: nil)
+    def initialize(
+      payload,
+      timestamp:,
+      primary_signature: nil,
+      secondary_signature: nil,
+      primary_signature_key: nil,
+      secondary_signature_key: nil
+    )
       @payload                 = payload
-      @timestamp               = headers['BOX-DELIVERY-TIMESTAMP'].to_s
+      @timestamp               = timestamp.to_s
       @primary_signature_key   = primary_signature_key.to_s
       @secondary_signature_key = secondary_signature_key.to_s
-      @primary_signature       = headers['BOX-SIGNATURE-PRIMARY']
-      @secondary_signature     = headers['BOX-SIGNATURE-SECONDARY']
+      @primary_signature       = primary_signature
+      @secondary_signature     = secondary_signature
     end
 
     def valid_message?
@@ -35,9 +42,9 @@ module Boxr
     end
 
     def generate_signature(key)
-      message_as_bytes = (payload.bytes + timestamp.bytes).pack('U')
-      digest = OpenSSL::HMAC.hexdigest('SHA256', key, message_as_bytes)
-      Base64.encode64(digest)
+      message_as_bytes = (payload.bytes + timestamp.bytes).pack('U*')
+      digest = OpenSSL::HMAC.digest('SHA256', key, message_as_bytes)
+      Base64.strict_encode64(digest)
     end
 
     private
@@ -49,7 +56,7 @@ module Boxr
     def delivery_time
       Time.parse(timestamp).utc
     rescue ArgumentError
-      raise BoxrError.new(boxr_message: "Webhook authenticity not verified: invalid timestamp")
+      raise BoxrError.new(boxr_message: 'Webhook authenticity not verified: invalid timestamp')
     end
 
     def message_age

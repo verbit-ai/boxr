@@ -272,7 +272,7 @@ module Boxr
     private
 
     def preflight_check(io, filename, parent_id)
-      size = File.size(io)
+      size = io.size
 
       #TODO: need to make sure that figuring out the filename from the path_to_file works for people using Windows
       attributes = {name: filename, parent: {id: "#{parent_id}"}, size: size}
