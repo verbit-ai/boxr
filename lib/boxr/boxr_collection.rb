@@ -28,12 +28,12 @@ class BoxrCollection < Array
 
   # NOTE: @offset, @limit, @total_count returns count of ALL TYPES of the items
   # it can have a bit confusing behavior, when for example
-  # there is 20 itmes in the folder:
+  # there is 10 itmes in the folder:
   # 7 files and 3 folders
   # #collection_for_type('file') returns only 7 file items when you're set limit to 10, offset to 0
   # there is no easy way to fix this
-  # as total_count is received to the API, and there is no easy way to filter by types to have proper
-  # without addition API queries and serious gem refactorings whis is doesn't worth doing that now
+  # as total_count is received from the API, and there is no easy way to filter by types to have proper
+  # without addition API queries and serious gem refactorings which is doesn't worth doing that now
   def collection_for_type(type)
     items = select { |i| i.type == type }
 

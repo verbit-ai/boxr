@@ -139,7 +139,6 @@ module Boxr
         end
       end until offset - total_count >= 0
 
-      # FIXME: check what offset and total_count values are here
       BoxrCollection.new(
         entries.flatten.map{ |i| BoxrMash.new(i) },
         offset,
