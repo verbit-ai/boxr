@@ -491,12 +491,13 @@ delete_webhook(webhook_id)
 
 # When receiving a webhook, it is advised to verify that it was sent by Box
 Boxr::WebhookValidator.new(
-  headers,
   payload,
+  timestamp: timestamp,
+  primary_signature: primary_signature,
+  secondary_signature: secondary_signature,
   primary_signature_key: primary_signature_key,
   secondary_signature_key: secondary_signature_key
 ).valid_message?
-
 ```
 
 ## Contributing
